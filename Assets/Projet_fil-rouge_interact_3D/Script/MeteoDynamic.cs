@@ -8,10 +8,20 @@ using Tenkoku.Core;
 
 public class WeatherManager : MonoBehaviour
 {
+    public static WeatherManager instance{get ; private set;}
+    private void Awake()
+    {
+        if(!instance || instance != this) instance = this;
+        else Destroy(gameObject);
+    }
+
     [Header("Configuration API")]
     public string apiKey = "efc2205553006d7bd24124c909dd6c5c";
     public float latitude = 35.6895f;  // Exemple : Tokyo
     public float longitude = 139.6917f;
+
+    public WeatherData weatherData => _weatherData;
+    private WeatherData _weatherData;
 
     // Référence au module principal de Tenkoku
     private TenkokuModule tenkoku;
@@ -34,7 +44,7 @@ public class WeatherManager : MonoBehaviour
         StartCoroutine(GetWeatherAndSetTime(latitude, longitude));
     }
 
-    IEnumerator GetWeatherAndSetTime(float lat, float lon)
+    public IEnumerator GetWeatherAndSetTime(float lat, float lon)
     {
         string url = $"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}&units=metric";
 
@@ -52,6 +62,7 @@ public class WeatherManager : MonoBehaviour
             {
                 string jsonResponse = webRequest.downloadHandler.text;
                 WeatherData data = JsonUtility.FromJson<WeatherData>(jsonResponse);
+                _weatherData = data;
 
                 if (data.weather != null && data.weather.Length > 0)
                 {
