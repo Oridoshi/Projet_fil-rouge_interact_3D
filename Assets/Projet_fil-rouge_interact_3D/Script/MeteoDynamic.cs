@@ -164,6 +164,9 @@ public class WeatherManager : MonoBehaviour
                 Debug.Log("État météo non géré spécifiquement : " + etatMeteo);
                 break;
         }
+
+        InfoSectionUI.instance.StopAllCoroutines();
+        InfoSectionUI.instance.StartCoroutine(InfoSectionUI.instance.UpdateInfoUI());
     }
 }
 

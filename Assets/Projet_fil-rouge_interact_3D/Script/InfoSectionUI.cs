@@ -6,9 +6,16 @@ using System.Collections.Generic;
 public class InfoSectionUI : MonoBehaviour
 {
     private List<Text> infoValues = new List<Text>();
-
+    public static InfoSectionUI instance{get ; private set;}
+    
+    private void Awake()
+    {
+        if(!instance || instance != this) instance = this;
+        else Destroy(gameObject);
+    }
+    
     // On transforme le Start en Coroutine
-    IEnumerator Start()
+    public IEnumerator UpdateInfoUI()
     {
         // 1. Initialisation des composants (on le fait direct)
         foreach (Transform child in transform)
